@@ -28,6 +28,14 @@ export default {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
 				},
+				gmail: {
+					primary: 'hsl(var(--gmail-primary))',
+					secondary: 'hsl(var(--gmail-secondary))',
+					unread: 'hsl(var(--gmail-unread))',
+					read: 'hsl(var(--gmail-read))',
+					important: 'hsl(var(--gmail-important))',
+					attachment: 'hsl(var(--gmail-attachment))'
+				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'
