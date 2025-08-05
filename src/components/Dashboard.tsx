@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AuthButton } from './AuthButton';
 import { EmailList } from './EmailList';
+import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 import { 
   Mail, 
   Inbox, 
@@ -15,18 +15,7 @@ import {
 } from 'lucide-react';
 
 export const Dashboard = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-
-  const handleAuthSuccess = (newToken: string) => {
-    setToken(newToken);
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    setToken(null);
-    setIsAuthenticated(false);
-  };
+  const { isAuthenticated, user } = useGoogleAuth();
 
   const stats = [
     { label: 'Total de Emails', value: '1,234', icon: Mail, color: 'text-gmail-primary' },
@@ -62,11 +51,7 @@ export const Dashboard = () => {
               <Database className="w-3 h-3 mr-1" />
               ChromaDB
             </Badge>
-            <AuthButton 
-              isAuthenticated={isAuthenticated}
-              onAuthSuccess={handleAuthSuccess}
-              onLogout={handleLogout}
-            />
+            <AuthButton />
           </div>
         </div>
 
@@ -97,9 +82,9 @@ export const Dashboard = () => {
         )}
 
         {/* Main Content */}
-        {isAuthenticated && token ? (
+        {isAuthenticated && user ? (
           <div className="h-[700px]">
-            <EmailList token={token} />
+            <EmailList token={user.accessToken} />
           </div>
         ) : (
           <Card className="bg-gradient-to-br from-card to-gmail-secondary border-gmail-primary/20">

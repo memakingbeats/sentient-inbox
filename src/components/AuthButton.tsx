@@ -1,53 +1,40 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mail, LogOut } from 'lucide-react';
-import { toast } from 'sonner';
+import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 
-interface AuthButtonProps {
-  isAuthenticated: boolean;
-  onAuthSuccess: (token: string) => void;
-  onLogout: () => void;
-}
+export const AuthButton = () => {
+  const { isAuthenticated, user, isLoading, authenticate, logout } = useGoogleAuth();
 
-export const AuthButton = ({ isAuthenticated, onAuthSuccess, onLogout }: AuthButtonProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleGoogleAuth = async () => {
-    setIsLoading(true);
-    try {
-      // Simular autenticação por agora - você precisará implementar Google OAuth
-      setTimeout(() => {
-        onAuthSuccess('mock-token');
-        toast.success('Conectado ao Gmail com sucesso!');
-        setIsLoading(false);
-      }, 1500);
-    } catch (error) {
-      toast.error('Erro ao conectar com Gmail');
-      setIsLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    onLogout();
-    toast.success('Desconectado do Gmail');
-  };
-
-  if (isAuthenticated) {
+  if (isAuthenticated && user) {
     return (
-      <Button 
-        onClick={handleLogout}
-        variant="outline"
-        className="bg-gmail-secondary border-gmail-primary text-foreground hover:bg-gmail-primary hover:text-primary-foreground"
-      >
-        <LogOut className="w-4 h-4 mr-2" />
-        Desconectar
-      </Button>
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <img 
+            src={user.picture} 
+            alt={user.name}
+            className="w-8 h-8 rounded-full"
+          />
+          <div className="hidden sm:block">
+            <p className="text-sm font-medium">{user.name}</p>
+            <p className="text-xs text-muted-foreground">{user.email}</p>
+          </div>
+        </div>
+        <Button 
+          onClick={logout}
+          variant="outline"
+          size="sm"
+          className="bg-gmail-secondary border-gmail-primary text-foreground hover:bg-gmail-primary hover:text-primary-foreground"
+        >
+          <LogOut className="w-4 h-4 mr-2" />
+          Sair
+        </Button>
+      </div>
     );
   }
 
   return (
     <Button 
-      onClick={handleGoogleAuth}
+      onClick={authenticate}
       disabled={isLoading}
       className="bg-gradient-to-r from-gmail-primary to-red-500 hover:from-gmail-primary hover:to-red-600 text-primary-foreground shadow-lg hover:shadow-glow transition-all duration-300"
     >
